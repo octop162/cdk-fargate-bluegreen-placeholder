@@ -16,3 +16,8 @@ class EcrStack(Stack):
                        repository_name='app-repository',
                        removal_policy=RemovalPolicy.DESTROY,
                        )
+
+        ecr.Repository(self, 'WebRepository',
+                       repository_name='web-repository',
+                       removal_policy=RemovalPolicy.DESTROY,
+                       )

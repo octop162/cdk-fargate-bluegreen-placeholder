@@ -3,6 +3,7 @@ from aws_cdk import (
     aws_elasticloadbalancingv2 as elbv2,
     aws_ec2 as ec2,
     aws_ecs as ecs,
+    aws_ecr as ecr,
 )
 from constructs import Construct
 from settings.constant import Constant
@@ -26,14 +27,23 @@ class ApplicationStack(Stack):
 
         task_definition = ecs.FargateTaskDefinition(self, "TaskDef")
 
-        container = task_definition.add_container("web",
-                                                  image=ecs.ContainerImage.from_registry(
-                                                      'httpd:latest')
-                                                  )
-
-        container.add_port_mappings(
+        container_web = task_definition.add_container("web",
+                                                      image=ecs.ContainerImage.from_ecr_repository(
+                                                          ecr.Repository.from_repository_name(self, 'WebRepository', 'web-repository'))
+                                                      )
+        container_app = task_definition.add_container("app",
+                                                      image=ecs.ContainerImage.from_ecr_repository(
+                                                          ecr.Repository.from_repository_name(self, 'AppRepository', 'app-repository'))
+                                                      )
+        container_web.add_port_mappings(
             ecs.PortMapping(
                 container_port=80,
+                protocol=ecs.Protocol.TCP,
+            )
+        )
+        container_app.add_port_mappings(
+            ecs.PortMapping(
+                container_port=3031,
                 protocol=ecs.Protocol.TCP,
             )
         )

@@ -22,24 +22,26 @@ RoleStack(
 )
 
 # ネットワーク構成
-NetworkStack(
+network_stack = NetworkStack(
     app,
     "NetworkStack",
     env=Environment(account=Constant.ACCOUNT, region=Constant.REGION),
 )
 
 # ECR
-EcrStack(
+ecr_stack = EcrStack(
     app,
     "EcrStack",
     env=Environment(account=Constant.ACCOUNT, region=Constant.REGION),
 )
 
 # アプリケーション
-ApplicationStack(
+application_stack = ApplicationStack(
     app,
     "ApplicationStack",
     env=Environment(account=Constant.ACCOUNT, region=Constant.REGION),
 )
+application_stack.add_dependency(network_stack)
+application_stack.add_dependency(ecr_stack)
 
 app.synth()
