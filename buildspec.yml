@@ -33,9 +33,8 @@ phases:
       - pwd
       - cd ..
       - pwd
-      - printf '[{"name":"WEB_IMAGE_URI","imageUri":"%s"}, {"name":"APP_IMAGE_URI", "imageUri":"%s"}]' $WEB_REPOSITORY_URI:$IMAGE_TAG $APP_REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
       - cat taskdef.json | sed -e s@\<WEB_IMAGE_URI\>@$WEB_REPOSITORY_URI:$IMAGE_TAG@ -e s@\<APP_IMAGE_URI\>@$APP_REPOSITORY_URI:$IMAGE_TAG@ > taskdef.json
 artifacts:
   files:
-      - appspec.yml
+      - appspec.yaml
       - taskdef.json
