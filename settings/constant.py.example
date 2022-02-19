@@ -1,0 +1,10 @@
+class Constant:
+
+    # ACCOUNT
+    ACCOUNT = ''
+    REGION = 'ap-northeast-1'
+
+    # VPC
+    VPC_ID = ''
+    AZ1 = 'ap-northeast-1a'
+    AZ2 = 'ap-northeast-1c'

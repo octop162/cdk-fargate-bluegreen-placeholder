@@ -1,28 +1,45 @@
 #!/usr/bin/env python3
-import os
 
-import aws_cdk as cdk
+from aws_cdk import (
+    App,
+    Environment,
+)
 
-from cdk_fargate_bluegreen_placeholder.cdk_fargate_bluegreen_placeholder_stack import CdkFargateBluegreenPlaceholderStack
+from settings.constant import Constant
+from application.role_stack import RoleStack
+from application.network_stack import NetworkStack
+from application.application_stack import ApplicationStack
+from application.ecr_stack import EcrStack
+
+app = App()
 
 
-app = cdk.App()
-CdkFargateBluegreenPlaceholderStack(app, "CdkFargateBluegreenPlaceholderStack",
-    # If you don't specify 'env', this stack will be environment-agnostic.
-    # Account/Region-dependent features and context lookups will not work,
-    # but a single synthesized template can be deployed anywhere.
+# IAMロール
+RoleStack(
+    app,
+    "RoleStack",
+    env=Environment(account=Constant.ACCOUNT, region=Constant.REGION),
+)
 
-    # Uncomment the next line to specialize this stack for the AWS Account
-    # and Region that are implied by the current CLI configuration.
+# ネットワーク構成
+NetworkStack(
+    app,
+    "NetworkStack",
+    env=Environment(account=Constant.ACCOUNT, region=Constant.REGION),
+)
 
-    #env=cdk.Environment(account=os.getenv('CDK_DEFAULT_ACCOUNT'), region=os.getenv('CDK_DEFAULT_REGION')),
+# ECR
+EcrStack(
+    app,
+    "EcrStack",
+    env=Environment(account=Constant.ACCOUNT, region=Constant.REGION),
+)
 
-    # Uncomment the next line if you know exactly what Account and Region you
-    # want to deploy the stack to. */
-
-    #env=cdk.Environment(account='123456789012', region='us-east-1'),
-
-    # For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html
-    )
+# アプリケーション
+ApplicationStack(
+    app,
+    "ApplicationStack",
+    env=Environment(account=Constant.ACCOUNT, region=Constant.REGION),
+)
 
 app.synth()
