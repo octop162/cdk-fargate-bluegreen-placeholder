@@ -51,6 +51,8 @@ class ApplicationStack(Stack):
         service = ecs.FargateService(self, "FargateService",
                                      cluster=cluster,
                                      task_definition=task_definition,
+                                     deployment_controller=ecs.DeploymentController(
+                                         type=ecs.DeploymentControllerType.CODE_DEPLOY)
                                      )
 
         ############################
@@ -61,12 +63,24 @@ class ApplicationStack(Stack):
                                             internet_facing=True,
                                             )
 
-        listener = alb.add_listener("Listener",
-                                    port=80,
-                                    open=True,
-                                    )
+        main_listener = alb.add_listener("MainListener",
+                                         port=80,
+                                         protocol=elbv2.Protocol.HTTP,
+                                         open=True,
+                                         )
 
-        target1 = listener.add_targets("ApplicationFleets",
-                                       port=80,
-                                       targets=[service]
-                                       )
+        test_listener = alb.add_listener("TestListener",
+                                         port=20080,
+                                         protocol=elbv2.Protocol.HTTP,
+                                         open=True,
+                                         )
+
+        target1 = main_listener.add_targets("ApplicationFleets1",
+                                            port=80,
+                                            targets=[service]
+                                            )
+
+        target2 = test_listener.add_targets("ApplicationFleets2",
+                                            port=80,
+                                            targets=[service]
+                                            )
