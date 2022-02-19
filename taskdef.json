@@ -1,6 +1,6 @@
 {
   "ipcMode": null,
-  "executionRoleArn": "arn:aws:iam::595135303684:role/ApplicationStack-TaskDefExecutionRoleB4775C97-1DD4QB2P71YAQ",
+  "executionRoleArn": "arn:aws:iam::595135303684:role/ApplicationStack-TaskDefExecutionRoleB4775C97-168U8U48LCCCI",
   "containerDefinitions": [
     {
       "dnsSearchDomains": [],
@@ -97,7 +97,7 @@
   ],
   "placementConstraints": [],
   "memory": "512",
-  "taskRoleArn": "arn:aws:iam::595135303684:role/ApplicationStack-TaskDefTaskRole1EDB4A67-V6JV3TB8D4E0",
+  "taskRoleArn": "arn:aws:iam::595135303684:role/ApplicationStack-TaskDefTaskRole1EDB4A67-3U5Y2DIVKUW8",
   "compatibilities": [
     "EC2",
     "FARGATE"
@@ -110,7 +110,6 @@
   "networkMode": "awsvpc",
   "runtimePlatform": null,
   "cpu": "256",
-  "revision": 5,
   "status": "ACTIVE",
   "inferenceAccelerators": null,
   "proxyConfiguration": null,

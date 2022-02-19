@@ -23,7 +23,10 @@ class ApplicationStack(Stack):
         ############################
         # ECS
         ############################
-        cluster = ecs.Cluster(self, "EcsCluster", vpc=vpc)
+        cluster = ecs.Cluster(
+            self, "EcsCluster",
+            cluster_name="EcsCluster", vpc=vpc
+        )
 
         task_definition = ecs.FargateTaskDefinition(self, "TaskDef")
 
@@ -48,12 +51,15 @@ class ApplicationStack(Stack):
             )
         )
 
-        service = ecs.FargateService(self, "FargateService",
-                                     cluster=cluster,
-                                     task_definition=task_definition,
-                                     deployment_controller=ecs.DeploymentController(
-                                         type=ecs.DeploymentControllerType.CODE_DEPLOY)
-                                     )
+        service = ecs.FargateService(
+            self, "FargateService",
+            service_name='FargateService',
+            cluster=cluster,
+            task_definition=task_definition,
+            deployment_controller=ecs.DeploymentController(
+                type=ecs.DeploymentControllerType.CODE_DEPLOY
+            )
+        )
 
         ############################
         # Load Balancer

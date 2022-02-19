@@ -10,6 +10,7 @@ from application.role_stack import RoleStack
 from application.network_stack import NetworkStack
 from application.application_stack import ApplicationStack
 from application.ecr_stack import EcrStack
+from deployment.deployment_stack import DeploymentStack
 
 app = App()
 
@@ -43,5 +44,12 @@ application_stack = ApplicationStack(
 )
 application_stack.add_dependency(network_stack)
 application_stack.add_dependency(ecr_stack)
+
+# デプロイメント
+DeploymentStack(
+    app,
+    'DeploymentStack',
+    env=Environment(account=Constant.ACCOUNT, region=Constant.REGION),
+)
 
 app.synth()
