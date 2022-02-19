@@ -33,6 +33,6 @@ phases:
       - pwd
       - cd ..
       - pwd
-      - printf '[{"name":"web","imageUri":"%s"}, {"name":"app", "ImageUri":"%s"}]' $WEB_REPOSITORY_URI:$IMAGE_TAG $APP_REPOSITORY_URI:$IMAGE_TAG> imagedefinitions.json
+      - printf '[{"name":"WEB_IMAGE_URI","imageUri":"%s"}, {"name":"APP_IMAGE_URI", "imageUri":"%s"}]' $WEB_REPOSITORY_URI:$IMAGE_TAG $APP_REPOSITORY_URI:$IMAGE_TAG> imagedefinitions.json
 artifacts:
   files: imagedefinitions.json
