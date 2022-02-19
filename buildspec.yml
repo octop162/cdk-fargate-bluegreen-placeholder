@@ -14,8 +14,9 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t $APP_REPOSITORY_URI:latest -f Dockerfile.flask ./image
-      - docker build -t $WEB_REPOSITORY_URI:latest -f Dockerfile.nginx ./image
+      - cd image
+      - docker build -t $APP_REPOSITORY_URI:latest -f Dockerfile.flask .
+      - docker build -t $WEB_REPOSITORY_URI:latest -f Dockerfile.nginx .
       - docker tag $APP_REPOSITORY_URI:latest $APP_REPOSITORY_URI:$IMAGE_TAG
       - docker tag $WEB_REPOSITORY_URI:latest $WEB_REPOSITORY_URI:$IMAGE_TAG
   post_build:
