@@ -7,7 +7,6 @@ phases:
       - aws --version
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 595135303684.dkr.ecr.ap-northeast-1.amazonaws.com
       - APP_REPOSITORY_URI=595135303684.dkr.ecr.ap-northeast-1.amazonaws.com/app-repository
-      - WEB_REPOSITORY_URI=595135303684.dkr.ecr.ap-northeast-1.amazonaws.com/web-repository
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
@@ -16,25 +15,20 @@ phases:
       - echo Building the Docker image...
       - cd image
       - docker build -t $APP_REPOSITORY_URI:latest -f Dockerfile.flask .
-      - docker build -t $WEB_REPOSITORY_URI:latest -f Dockerfile.nginx .
       - docker tag $APP_REPOSITORY_URI:latest $APP_REPOSITORY_URI:$IMAGE_TAG
-      - docker tag $WEB_REPOSITORY_URI:latest $WEB_REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker images...
       - docker push $APP_REPOSITORY_URI:latest
       - docker push $APP_REPOSITORY_URI:$IMAGE_TAG
-      - echo Build completed on `date`
-      - echo Pushing the Docker images...
-      - docker push $WEB_REPOSITORY_URI:latest
-      - docker push $WEB_REPOSITORY_URI:$IMAGE_TAG
       - echo Writing image definitions file...
       - pwd
       - cd ..
       - pwd
-      - cat taskdef.json | sed -e s@\<WEB_IMAGE_URI\>@$WEB_REPOSITORY_URI:$IMAGE_TAG@ -e s@\<APP_IMAGE_URI\>@$APP_REPOSITORY_URI:$IMAGE_TAG@ > taskdef.json
+      - printf '{"Version":"1.0","ImageURI":"%s"}' $APP_REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
 artifacts:
   files:
       - appspec.yaml
       - taskdef.json
+      - imageDetail.json
