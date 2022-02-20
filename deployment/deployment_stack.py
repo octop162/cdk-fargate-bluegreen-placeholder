@@ -191,15 +191,15 @@ class DeploymentStack(Stack):
                 ],
                 resources=["*"],
                 effect=iam.Effect.ALLOW,
-                conditions={
-                    "StringEqualsIfExists": {
-                        "iam:PassedToService": [
-                            "cloudformation.amazonaws.com",
-                            "elasticbeanstalk.amazonaws.com",
-                            "ec2.amazonaws.com",
-                            "ecs-tasks.amazonaws.com"
-                        ]
-                    }
-                }
+                # conditions={
+                #     "StringEqualsIfExists": {
+                #         "iam:PassedToService": [
+                #             "cloudformation.amazonaws.com",
+                #             "elasticbeanstalk.amazonaws.com",
+                #             "ec2.amazonaws.com",
+                #             "ecs-tasks.amazonaws.com"
+                #         ]
+                #     }
+                # }
             )
         )

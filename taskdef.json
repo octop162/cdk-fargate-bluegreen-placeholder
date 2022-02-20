@@ -1,6 +1,6 @@
 {
   "ipcMode": null,
-  "executionRoleArn": "arn:aws:iam::595135303684:role/ApplicationStack-TaskDefExecutionRoleB4775C97-168U8U48LCCCI",
+  "executionRoleArn": "arn:aws:iam::595135303684:role/ApplicationStack-TaskDefExecutionRoleB4775C97-EBARTQEYCP8P",
   "containerDefinitions": [
     {
       "dnsSearchDomains": [],
@@ -97,7 +97,7 @@
   ],
   "placementConstraints": [],
   "memory": "512",
-  "taskRoleArn": "arn:aws:iam::595135303684:role/ApplicationStack-TaskDefTaskRole1EDB4A67-3U5Y2DIVKUW8",
+  "taskRoleArn": "arn:aws:iam::595135303684:role/ApplicationStack-TaskDefTaskRole1EDB4A67-11AEC0Z8V1I7E",
   "compatibilities": [
     "EC2",
     "FARGATE"
