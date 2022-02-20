@@ -28,8 +28,7 @@ class ApplicationStack(Stack):
             cluster_name="EcsCluster", vpc=vpc
         )
 
-        task_definition = ecs.FargateTaskDefinition(
-            self, "TaskDef", memory_limit_mib=256, cpu=256)
+        task_definition = ecs.FargateTaskDefinition(self, "TaskDef")
 
         container_web = task_definition.add_container("web",
                                                       image=ecs.ContainerImage.from_ecr_repository(
