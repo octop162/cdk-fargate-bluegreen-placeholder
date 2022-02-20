@@ -6,8 +6,6 @@ from aws_cdk import (
     aws_codepipeline_actions as codepipeline_actions,
     aws_codecommit as codecommit,
     aws_codebuild as codebuild,
-    aws_codedeploy as codedeploy,
-    aws_ecs as ecs,
     aws_iam as iam,
 )
 from constructs import Construct
@@ -191,15 +189,5 @@ class DeploymentStack(Stack):
                 ],
                 resources=["*"],
                 effect=iam.Effect.ALLOW,
-                # conditions={
-                #     "StringEqualsIfExists": {
-                #         "iam:PassedToService": [
-                #             "cloudformation.amazonaws.com",
-                #             "elasticbeanstalk.amazonaws.com",
-                #             "ec2.amazonaws.com",
-                #             "ecs-tasks.amazonaws.com"
-                #         ]
-                #     }
-                # }
             )
         )
