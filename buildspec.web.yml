@@ -14,12 +14,13 @@ phases:
       - echo Build started on `date`
       - echo Building the Docker image...
       - cd image
-      - docker build -t $WEB_REPOSITORY_URI:$IMAGE_TAG -f Dockerfile.nginx .
+      - docker build -t $WEB_REPOSITORY_URI:$IMAGE_TAG -t $WEB_REPOSITORY_URI:latest -f Dockerfile.nginx .
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker images...
       - docker push $WEB_REPOSITORY_URI:$IMAGE_TAG
+      - docker push $WEB_REPOSITORY_URI:latest
       - echo Writing image definitions file...
       - pwd
       - cd ..
