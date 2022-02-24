@@ -7,6 +7,7 @@ from aws_cdk import (
     aws_codecommit as codecommit,
     aws_codebuild as codebuild,
     aws_iam as iam,
+    aws_ecs as ecs,
 )
 from constructs import Construct
 from settings.constant import Constant

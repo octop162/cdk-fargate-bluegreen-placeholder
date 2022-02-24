@@ -29,7 +29,7 @@ class ApplicationStack(Stack):
         )
 
         task_definition = ecs.FargateTaskDefinition(
-            self, "TaskDef", memory_limit_mib=1024, cpu=512)
+            self, "TaskDef", memory_limit_mib=512, cpu=256)
 
         container_web = task_definition.add_container("web",
                                                       image=ecs.ContainerImage.from_ecr_repository(
