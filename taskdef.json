@@ -1,117 +1,35 @@
 {
-  "ipcMode": null,
-  "executionRoleArn": "arn:aws:iam::595135303684:role/ApplicationStack-TaskDefExecutionRoleB4775C97-N54PA05AZLK2",
   "containerDefinitions": [
     {
-      "dnsSearchDomains": [],
-      "environmentFiles": [],
-      "logConfiguration": null,
-      "entryPoint": [],
+      "name": "web",
+      "image": "<WEB_IMAGE_URI>",
       "portMappings": [
         {
           "hostPort": 80,
           "protocol": "tcp",
           "containerPort": 80
         }
-      ],
-      "command": [],
-      "linuxParameters": null,
-      "cpu": 0,
-      "environment": [],
-      "resourceRequirements": null,
-      "ulimits": [],
-      "dnsServers": [],
-      "mountPoints": [],
-      "workingDirectory": null,
-      "secrets": [],
-      "dockerSecurityOptions": [],
-      "memory": null,
-      "memoryReservation": null,
-      "volumesFrom": [],
-      "stopTimeout": null,
-      "image": "<WEB_IMAGE_URI>",
-      "startTimeout": null,
-      "firelensConfiguration": null,
-      "dependsOn": null,
-      "disableNetworking": null,
-      "interactive": null,
-      "healthCheck": null,
-      "essential": true,
-      "links": [],
-      "hostname": null,
-      "extraHosts": [],
-      "pseudoTerminal": null,
-      "user": null,
-      "readonlyRootFilesystem": null,
-      "dockerLabels": {},
-      "systemControls": [],
-      "privileged": null,
-      "name": "web"
+      ]
     },
     {
-      "dnsSearchDomains": [],
-      "environmentFiles": [],
-      "logConfiguration": null,
-      "entryPoint": [],
+      "name": "app",
+      "image": "<APP_IMAGE_URI>",
       "portMappings": [
         {
           "hostPort": 3031,
           "protocol": "tcp",
           "containerPort": 3031
         }
-      ],
-      "command": [],
-      "linuxParameters": null,
-      "cpu": 0,
-      "environment": [],
-      "resourceRequirements": null,
-      "ulimits": [],
-      "dnsServers": [],
-      "mountPoints": [],
-      "workingDirectory": null,
-      "secrets": [],
-      "dockerSecurityOptions": [],
-      "memory": null,
-      "memoryReservation": null,
-      "volumesFrom": [],
-      "stopTimeout": null,
-      "image": "<APP_IMAGE_URI>",
-      "startTimeout": null,
-      "firelensConfiguration": null,
-      "dependsOn": null,
-      "disableNetworking": null,
-      "interactive": null,
-      "healthCheck": null,
-      "essential": true,
-      "links": [],
-      "hostname": null,
-      "extraHosts": [],
-      "pseudoTerminal": null,
-      "user": null,
-      "readonlyRootFilesystem": null,
-      "dockerLabels": {},
-      "systemControls": [],
-      "privileged": null,
-      "name": "app"
+      ]
     }
   ],
-  "placementConstraints": [],
+  "networkMode": "awsvpc",
+  "family": "ApplicationStackTaskDef6CFB6B9C",
+  "cpu": "256",
   "memory": "512",
   "taskRoleArn": "arn:aws:iam::595135303684:role/ApplicationStack-TaskDefTaskRole1EDB4A67-9LRYZAOEG3C9",
-  "compatibilities": [
-    "EC2",
-    "FARGATE"
-  ],
-  "family": "ApplicationStackTaskDef6CFB6B9C",
-  "pidMode": null,
+  "executionRoleArn": "arn:aws:iam::595135303684:role/ApplicationStack-TaskDefExecutionRoleB4775C97-N54PA05AZLK2",
   "requiresCompatibilities": [
     "FARGATE"
-  ],
-  "networkMode": "awsvpc",
-  "runtimePlatform": null,
-  "cpu": "256",
-  "status": "ACTIVE",
-  "inferenceAccelerators": null,
-  "proxyConfiguration": null,
-  "volumes": []
+  ]
 }
