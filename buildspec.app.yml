@@ -28,6 +28,4 @@ phases:
       - printf '{"Version":"1.0","ImageURI":"%s"}' $APP_REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
 artifacts:
   files:
-      - appspec.yaml
-      - taskdef.json
       - imageDetail.json
