@@ -1,6 +1,8 @@
+from ipaddress import ip_address
 from aws_cdk import (
     Stack,
     aws_elasticloadbalancingv2 as elbv2,
+    aws_elasticloadbalancingv2_targets as targets,
     aws_ec2 as ec2,
     aws_ecs as ecs,
     aws_ecr as ecr,
@@ -54,40 +56,56 @@ class ApplicationStack(Stack):
 
         service = ecs.FargateService(
             self, "FargateService",
-            service_name='FargateService',
             cluster=cluster,
             task_definition=task_definition,
             deployment_controller=ecs.DeploymentController(
                 type=ecs.DeploymentControllerType.CODE_DEPLOY
-            )
+            ),
         )
 
         ############################
         # Load Balancer
         ############################
-        alb = elbv2.ApplicationLoadBalancer(self, "Alb",
-                                            vpc=vpc,
-                                            internet_facing=True,
-                                            )
+        alb = elbv2.ApplicationLoadBalancer(
+            self, "Alb",
+            vpc=vpc,
+            internet_facing=True,
+        )
 
-        main_listener = alb.add_listener("MainListener",
-                                         port=80,
-                                         protocol=elbv2.Protocol.HTTP,
-                                         open=True,
-                                         )
+        # target1 = elbv2.ApplicationTargetGroup(
+        #     self, 'Target1',
+        #     port=80,
+        #     protocol=elbv2.ApplicationProtocol.HTTP,
+        #     target_type=elbv2.TargetType.IP,
+        #     vpc=vpc,
+        # )
 
-        test_listener = alb.add_listener("TestListener",
-                                         port=20080,
-                                         protocol=elbv2.Protocol.HTTP,
-                                         open=True,
-                                         )
+        target2 = elbv2.ApplicationTargetGroup(
+            self, 'Target2',
+            port=80,
+            protocol=elbv2.ApplicationProtocol.HTTP,
+            target_type=elbv2.TargetType.IP,
+            vpc=vpc,
+        )
 
-        target1 = main_listener.add_targets("ApplicationFleets1",
-                                            port=80,
-                                            targets=[service]
-                                            )
+        main_listener = alb.add_listener(
+            "MainListener",
+            port=80,
+            protocol=elbv2.Protocol.HTTP,
+            open=True,
+        )
+        main_listener.add_targets(
+            'Target1',
+            port=80,
+            targets=[service]
+        )
 
-        target2 = test_listener.add_targets("ApplicationFleets2",
-                                            port=80,
-                                            targets=[service]
-                                            )
+        test_listener = alb.add_listener(
+            "TestListener",
+            port=20080,
+            protocol=elbv2.Protocol.HTTP,
+            open=True,
+            default_action=elbv2.ListenerAction.forward(
+                target_groups=[target2],
+            )
+        )
