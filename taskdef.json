@@ -27,8 +27,8 @@
   "family": "ApplicationStackTaskDef6CFB6B9C",
   "cpu": "256",
   "memory": "512",
-  "taskRoleArn": "arn:aws:iam::595135303684:role/ApplicationStack-TaskDefTaskRole1EDB4A67-HYY72S63XDGF",
-  "executionRoleArn": "arn:aws:iam::595135303684:role/ApplicationStack-TaskDefExecutionRoleB4775C97-1LBH56DROSI5",
+  "taskRoleArn": "arn:aws:iam::595135303684:role/ApplicationStack-TaskDefTaskRole1EDB4A67-19061WMCFKC1N",
+  "executionRoleArn": "arn:aws:iam::595135303684:role/ApplicationStack-TaskDefExecutionRoleB4775C97-1Y1R115193HDM",
   "requiresCompatibilities": [
     "FARGATE"
   ]
