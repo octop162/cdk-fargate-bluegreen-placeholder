@@ -9,7 +9,10 @@
           "protocol": "tcp",
           "containerPort": 80
         }
-      ]
+      ],
+      "logConfiguration": {
+        "logDriver":"awsfirelens"
+      }
     },
     {
       "name": "app",
@@ -21,6 +24,27 @@
           "containerPort": 3031
         }
       ]
+    },
+    {
+      "essential": true,
+      "image": "595135303684.dkr.ecr.ap-northeast-1.amazonaws.com/firelens-repository",
+      "name": "log_router",
+      "firelensConfiguration": {
+        "type": "fluentbit",
+        "options": {
+            "config-file-type": "file",
+            "config-file-value": "/fluent-bit/etc/extra.conf"
+        }
+      },
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "firelens-container",
+          "awslogs-region": "ap-northeast-1",
+          "awslogs-create-group": "true",
+          "awslogs-stream-prefix": "firelens"
+        }
+      }
     }
   ],
   "networkMode": "awsvpc",
