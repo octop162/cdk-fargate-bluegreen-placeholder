@@ -15,4 +15,4 @@ def about():
 
 @app.route("/health")
 def health():
-    return "<h3>Gold.</h3>"
+    return "<h3>Goldman.</h3>"

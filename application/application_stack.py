@@ -1,6 +1,7 @@
 from ipaddress import ip_address
 from aws_cdk import (
     Stack,
+    Duration,
     aws_elasticloadbalancingv2 as elbv2,
     aws_elasticloadbalancingv2_targets as targets,
     aws_ec2 as ec2,
@@ -8,6 +9,7 @@ from aws_cdk import (
     aws_ecr as ecr,
 )
 from constructs import Construct
+from image.app.app import health
 from settings.constant import Constant
 
 
@@ -64,7 +66,7 @@ class ApplicationStack(Stack):
             task_definition=task_definition,
             deployment_controller=ecs.DeploymentController(
                 type=ecs.DeploymentControllerType.CODE_DEPLOY,
-            )
+            ),
         )
 
         ############################
@@ -76,6 +78,17 @@ class ApplicationStack(Stack):
             internet_facing=True,
         )
 
+        health_check = elbv2.HealthCheck(
+            enabled=True,
+            interval=Duration.seconds(30),
+            path='/',
+            protocol=elbv2.Protocol.HTTP,
+            healthy_http_codes='200',
+            healthy_threshold_count=2,
+            unhealthy_threshold_count=3,
+            timeout=Duration.seconds(10),
+        )
+
         main_listener = alb.add_listener(
             "MainListener",
             port=80,
@@ -84,7 +97,11 @@ class ApplicationStack(Stack):
         )
 
         target_group1 = main_listener.add_targets(
-            "Target1", port=80, targets=[service])
+            "Target1",
+            port=80,
+            targets=[service],
+            health_check=health_check,
+        )
 
         test_listener = alb.add_listener(
             "TestListener",
@@ -102,4 +119,11 @@ class ApplicationStack(Stack):
             protocol=elbv2.ApplicationProtocol.HTTP,
             target_type=elbv2.TargetType.IP,
             vpc=vpc,
+            health_check=health_check,
         )
+
+        # ターゲットグループをロードバランサに関連付ける
+        service.node.add_dependency(target_group1)
+        service.node.add_dependency(target_group2)
+        service.node.add_dependency(main_listener)
+        service.node.add_dependency(test_listener)

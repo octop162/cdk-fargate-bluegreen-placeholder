@@ -88,6 +88,20 @@ class DeploymentStack(Stack):
         )
 
         ############################
+        # CodeDeploy
+        ############################
+        # Deploy Role
+        deploy_role = iam.Role(
+            self, 'DeployRole',
+            role_name='BlueGreenDeployRole',
+            assumed_by=iam.ServicePrincipal('codedeploy.amazonaws.com'),
+        )
+        deploy_role.add_managed_policy(
+            iam.ManagedPolicy.from_aws_managed_policy_name(
+                'AWSCodeDeployRoleForECS')
+        )
+
+        ############################
         # CodePipeline
         ############################
         pipeline = codepipeline.Pipeline(
