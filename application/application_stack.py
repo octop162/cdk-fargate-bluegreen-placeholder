@@ -23,62 +23,8 @@ class ApplicationStack(Stack):
                                   )
 
         ############################
-        # Load Balancer
-        ############################
-        alb = elbv2.ApplicationLoadBalancer(
-            self, "Alb",
-            vpc=vpc,
-            internet_facing=True,
-        )
-
-        target_group1 = elbv2.ApplicationTargetGroup(
-            self, 'Target1',
-            port=80,
-            protocol=elbv2.ApplicationProtocol.HTTP,
-            target_type=elbv2.TargetType.IP,
-            vpc=vpc,
-        )
-
-        target_group2 = elbv2.ApplicationTargetGroup(
-            self, 'Target2',
-            port=80,
-            protocol=elbv2.ApplicationProtocol.HTTP,
-            target_type=elbv2.TargetType.IP,
-            vpc=vpc,
-        )
-
-        main_listener = alb.add_listener(
-            "MainListener",
-            port=80,
-            protocol=elbv2.Protocol.HTTP,
-            open=True,
-            default_action=elbv2.ListenerAction.forward(
-                target_groups=[target_group1],
-            )
-        )
-
-        test_listener = alb.add_listener(
-            "TestListener",
-            port=20080,
-            protocol=elbv2.Protocol.HTTP,
-            open=True,
-            default_action=elbv2.ListenerAction.forward(
-                target_groups=[target_group1],
-            )
-        )
-
-        ############################
         # ECS
         ############################
-
-        service_security_group = ec2.SecurityGroup(
-            self, 'ServiceSecurtyGroup',
-            vpc=vpc,
-        )
-        service_security_group.connections.allow_from(
-            alb,
-            ec2.Port.tcp(80),
-        )
 
         cluster = ecs.Cluster(
             self, "EcsCluster",
@@ -111,78 +57,49 @@ class ApplicationStack(Stack):
             )
         )
 
-        service = ecs.CfnService(
-            self, "Service",
-            cluster=cluster.cluster_name,
-            desired_count=1,
-            deployment_controller=ecs.CfnService.DeploymentControllerProperty(
-                type='CODE_DEPLOY'
-            ),
-            launch_type='FARGATE',
-            propagate_tags='SERVICE',
-            task_definition=task_definition.task_definition_arn,
-            load_balancers=[
-                ecs.CfnService.LoadBalancerProperty(
-                    container_name=task_definition.default_container.container_name,
-                    container_port=task_definition.default_container.container_port,
-                    target_group_arn=target_group1.target_group_arn,
-                )
-            ],
-            network_configuration=ecs.CfnService.NetworkConfigurationProperty(
-                awsvpc_configuration=ecs.CfnService.AwsVpcConfigurationProperty(
-                    subnets=vpc.select_subnets(
-                        subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT).subnet_ids,
-                    assign_public_ip="DISABLED",
-                    security_groups=[
-                        service_security_group.security_group_id,
-                    ]
-                )
+        service = ecs.FargateService(
+            self,
+            "Service",
+            cluster=cluster,
+            task_definition=task_definition,
+            deployment_controller=ecs.DeploymentController(
+                type=ecs.DeploymentControllerType.CODE_DEPLOY,
             )
         )
-        service.node.add_dependency(target_group1)
-        service.node.add_dependency(target_group2)
-        service.node.add_dependency(main_listener)
-        service.node.add_dependency(test_listener)
 
-        task_set1 = ecs.CfnTaskSet(
-            self, 'TaskSet1',
-            cluster=cluster.cluster_name,
-            service=service.attr_name,
-            scale=ecs.CfnTaskSet.ScaleProperty(
-                unit="PERCENT", value=100,
-            ),
-            task_definition=task_definition.task_definition_arn,
-            launch_type="FARGATE",
-            load_balancers=[
-                ecs.CfnTaskSet.LoadBalancerProperty(
-                    container_name=task_definition.default_container.container_name,
-                    container_port=task_definition.default_container.container_port,
-                    target_group_arn=target_group1.target_group_arn,
-                )
-            ],
+        ############################
+        # Load Balancer
+        ############################
+        alb = elbv2.ApplicationLoadBalancer(
+            self, "Alb",
+            vpc=vpc,
+            internet_facing=True,
         )
 
-        # task_set2 = ecs.CfnTaskSet(
-        #     self, 'TaskSet2',
-        #     cluster=cluster.cluster_name,
-        #     service=service.attr_name,
-        #     scale=ecs.CfnTaskSet.ScaleProperty(
-        #         unit="PERCENT", value=100,
-        #     ),
-        #     task_definition=task_definition.task_definition_arn,
-        #     launch_type="FARGATE",
-        #     load_balancers=[
-        #         ecs.CfnTaskSet.LoadBalancerProperty(
-        #             container_name=task_definition.default_container.container_name,
-        #             container_port=task_definition.default_container.container_port,
-        #             target_group_arn=target_group1.target_group_arn,
-        #         )
-        #     ],
-        # )
+        main_listener = alb.add_listener(
+            "MainListener",
+            port=80,
+            protocol=elbv2.Protocol.HTTP,
+            open=True,
+        )
 
-        # ecs.CfnPrimaryTaskSet(
-        #     self, 'PrimaryTaskSet',
-        #     cluster=cluster.cluster_name,
-        #     service=service.attr_name,
-        #     task_set_id=task_set1.attr_id,
-        # )
+        target_group1 = main_listener.add_targets(
+            "Target1", port=80, targets=[service])
+
+        test_listener = alb.add_listener(
+            "TestListener",
+            port=20080,
+            protocol=elbv2.Protocol.HTTP,
+            open=True,
+            default_action=elbv2.ListenerAction.forward(
+                target_groups=[target_group1],
+            )
+        )
+
+        target_group2 = elbv2.ApplicationTargetGroup(
+            self, 'Target2',
+            port=80,
+            protocol=elbv2.ApplicationProtocol.HTTP,
+            target_type=elbv2.TargetType.IP,
+            vpc=vpc,
+        )
