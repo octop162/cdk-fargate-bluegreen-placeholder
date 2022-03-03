@@ -23,7 +23,10 @@
           "protocol": "tcp",
           "containerPort": 3031
         }
-      ]
+      ],
+      "logConfiguration": {
+        "logDriver":"awsfirelens"
+      }
     },
     {
       "essential": true,
@@ -51,8 +54,8 @@
   "family": "ApplicationStackTaskDef6CFB6B9C",
   "cpu": "256",
   "memory": "512",
-  "taskRoleArn": "arn:aws:iam::595135303684:role/ApplicationStack-TaskDefTaskRole1EDB4A67-1OX0VFRKF0EBS",
-  "executionRoleArn": "arn:aws:iam::595135303684:role/ApplicationStack-TaskDefExecutionRoleB4775C97-1JUS0ROC0Q6FA",
+  "executionRoleArn": "arn:aws:iam::595135303684:role/ApplicationStack-TaskDefExecutionRoleB4775C97-OZ5FCS4AXGLT",
+  "taskRoleArn": "arn:aws:iam::595135303684:role/ApplicationStack-TaskDefTaskRole1EDB4A67-11SIFDHXBAO19",
   "requiresCompatibilities": [
     "FARGATE"
   ]

@@ -6,21 +6,12 @@ from aws_cdk import (
 )
 
 from settings.constant import Constant
-from application.role_stack import RoleStack
 from application.network_stack import NetworkStack
 from application.application_stack import ApplicationStack
 from application.ecr_stack import EcrStack
 from deployment.deployment_stack import DeploymentStack
 
 app = App()
-
-
-# IAMロール
-RoleStack(
-    app,
-    "RoleStack",
-    env=Environment(account=Constant.ACCOUNT, region=Constant.REGION),
-)
 
 # ネットワーク構成
 network_stack = NetworkStack(

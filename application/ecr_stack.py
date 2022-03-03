@@ -21,3 +21,8 @@ class EcrStack(Stack):
                        repository_name='web-repository',
                        removal_policy=RemovalPolicy.DESTROY,
                        )
+
+        ecr.Repository(self, 'FirelensRepository',
+                       repository_name='firelens-repository',
+                       removal_policy=RemovalPolicy.DESTROY,
+                       )
